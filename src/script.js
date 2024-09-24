@@ -3,6 +3,7 @@ import { getMovieReviewData } from "./data.js";
 function init() {
   const movieReviewData = getMovieReviewData();
   paintStatistics(movieReviewData);
+  paintMovieData(movieReviewData);
 }
 
 function paintStatistics(movieReviewData) {
@@ -34,6 +35,34 @@ function addStat(element, value) {
   const spanElement = document.createElement("span");
   spanElement.innerText = value;
   element.appendChild(spanElement);
+}
+
+function paintMovieData(movieReviewData) {
+  const flatReviewData = movieReviewData.flat();
+  const movielistEl = document.querySelector("#moviesListId UL");
+  flatReviewData.map((movie) => {
+    const liElem = document.createElement("li");
+    liElem.classList.add("card", "my-2", "p-2");
+
+    const titleElem = document.createElement("p");
+    titleElem.classList.add("text-xl", "mb-2");
+    titleElem.innerText = `${movie.title} - ${movie.rating}`;
+    liElem.appendChild(titleElem);
+
+    const reviewElem = document.createElement("p");
+    reviewElem.classList.add("text-xl", "mb-2");
+    reviewElem.innerText = `${movie.content}`;
+    liElem.appendChild(reviewElem);
+
+    const byElem = document.createElement("p");
+    byElem.classList.add("text-xl", "mb-2");
+    byElem.innerText = `${movie.by} on ${new Intl.DateTimeFormat(
+      "en-BD"
+    ).format(movie.on)} `;
+    liElem.appendChild(byElem);
+
+    movielistEl.appendChild(liElem);
+  });
 }
 
 init();
