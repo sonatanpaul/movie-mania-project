@@ -28,3 +28,7 @@ const movieReviewData = [
     },
   ],
 ];
+
+export function getMovieReviewData() {
+  return movieReviewData;
+}
