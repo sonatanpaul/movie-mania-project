@@ -1,9 +1,11 @@
 import { getMovieReviewData } from "./data.js";
+let sortDesc = false;
 
 function init() {
   const movieReviewData = getMovieReviewData();
   paintStatistics(movieReviewData);
   paintMovieData(movieReviewData);
+  buttonHandler(movieReviewData);
 }
 
 function paintStatistics(movieReviewData) {
@@ -39,8 +41,31 @@ function addStat(element, value) {
 
 function paintMovieData(movieReviewData) {
   const flatReviewData = movieReviewData.flat();
+  const sortedMovie = flatReviewData.toSorted((a, b) => a.on - b.on);
   const movielistEl = document.querySelector("#moviesListId UL");
-  flatReviewData.map((movie) => {
+  addMovieReviewData(movielistEl, sortedMovie);
+}
+function buttonHandler(movieReviewData) {
+  const sortingHandleButton = document.getElementById("sortBtnId");
+  sortingHandleButton.addEventListener("click", () =>
+    sortByReview(movieReviewData)
+  );
+}
+
+function sortByReview(movieReviewData) {
+  sortDesc = !sortDesc;
+  const movielistEl = document.querySelector("#moviesListId UL");
+  const flatReviewData = movieReviewData.flat();
+
+  const sortReviewData = sortDesc
+    ? flatReviewData.toSorted((a, b) => b.rating - a.rating)
+    : flatReviewData.toSorted((a, b) => a.rating - b.rating);
+  removeAllChildNodes(movielistEl);
+  addMovieReviewData(movielistEl, sortReviewData);
+}
+
+function addMovieReviewData(movielistEl, sortedMovie) {
+  sortedMovie.map((movie) => {
     const liElem = document.createElement("li");
     liElem.classList.add("card", "my-2", "p-2");
 
@@ -65,4 +90,9 @@ function paintMovieData(movieReviewData) {
   });
 }
 
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
 init();
